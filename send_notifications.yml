@@ -1,0 +1,47 @@
+openapi: "3.0.1"
+info:
+  title: Message Service API
+  description: Send-notification Microservice of Message in a Bottle Application
+  version: "0.1"
+
+servers:
+  - url: /api
+
+paths:
+  /email:
+   put:
+    tags: [send-notification]
+    summary: send an eamil via celery
+    operationId: mib.resources.notification.send_email
+    requestBody:
+     description: send an email according with request parameters
+     required: true
+     content:
+        application/json:
+         schema:
+          type: object
+          required:
+            - sender
+            - recipient
+            - body
+          properties:
+            sender:
+             type: string
+             description: sender's eamil 
+             example: bob@example.com
+             format: eamil
+            recipient:
+             type: string
+             description: recipient's email
+             example: alice@example.com
+             format: email 
+            body:
+             type: string
+             description: email content
+             example: 'Hi Alice how is it going?'
+             maxLength: 4096
+    responses:
+      200:
+       description: The email has been sent successfully 
+      default:
+       description: Error during sending process
