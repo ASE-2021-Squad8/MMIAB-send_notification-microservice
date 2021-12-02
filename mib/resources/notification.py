@@ -14,7 +14,7 @@ DefaultEmailConfig = EmailConfig(
     os.environ.get("MAIL_SERVER_PASSWORD", ""),
 )
 
-def mib_resources_notification_send_email(body):  # noqa: E501
+def send_email(body):  # noqa: E501
     """Send an email
 
     :param body: send an email according with request parameters
@@ -23,7 +23,7 @@ def mib_resources_notification_send_email(body):  # noqa: E501
     :rtype: None
     """
 
-    config = DefaultEmailConfig()
+    config = DefaultEmailConfig
     if connexion.request.is_json:
         body = connexion.request.get_json()
         try:
@@ -32,14 +32,22 @@ def mib_resources_notification_send_email(body):  # noqa: E501
                     server.starttls()
                     server.login(config.email, config.password)
 
+                if "sender" not in body or body["sender"] == "":
+                    return jsonify({"message": "invalid sender"}), 400
+
+                if "recipient" not in body or body["recipient"] == "":
+                    return jsonify({"message": "invalid recipient"}), 400
+
+                if "body" not in body or body["body"] == "":
+                    return jsonify({"message": "invalid email body"}), 400
+
                 mail = EmailMessage()
                 mail["Subject"] = "MMIAB - Message from " + body["sender"]
                 mail.set_content(body["body"])
 
                 server.sendmail(config.email, body["receiver"], mail.as_string())
-        except socket.timeout as e:  # pragma: no cover
-            print(str(e))
-            raise e
+        except Exception as e:  # pragma: no cover
+            return jsonify({"message": "failure while sending email"}), 500
     else:  # pragma: no cover
         return jsonify({"message": "endpoint requires json arguments"}), 400
 

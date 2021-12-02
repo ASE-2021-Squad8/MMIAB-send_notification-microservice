@@ -11,7 +11,7 @@ paths:
   /email:
    put:
     tags: [send-notification]
-    summary: send an eamil via celery
+    summary: send an eamil
     operationId: mib.resources.notification.send_email
     requestBody:
      description: send an email according with request parameters
@@ -29,7 +29,7 @@ paths:
              type: string
              description: sender's eamil 
              example: bob@example.com
-             format: eamil
+             format: email
             recipient:
              type: string
              description: recipient's email
@@ -42,6 +42,8 @@ paths:
              maxLength: 4096
     responses:
       200:
-       description: The email has been sent successfully 
+       description: The email has been sent successfully
+      400:
+       description: Missing required field
       default:
        description: Error during sending process
