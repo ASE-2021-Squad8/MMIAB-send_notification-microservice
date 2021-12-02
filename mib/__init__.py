@@ -8,7 +8,6 @@ __version__ = "0.1"
 import logging
 from datetime import timedelta
 
-from celery import Celery
 from celery.schedules import crontab  # cronetab for lottery
 from flask import Flask
 from flask_environments import Environments
@@ -64,29 +63,3 @@ def init_logger():
     from flask.logging import default_handler
 
     logger.addHandler(default_handler)
-
-
-#   period tasks are tested functionally
-def create_celery(flask_app):  # pragma: no cover
-    # broker's url and storing results
-    BACKEND = BROKER = "redis://redis:6379"
-
-    celery = Celery(__name__, backend=BACKEND, broker=BROKER)
-    # set timezone
-    celery.conf.timezone = "UTC"
-    # set up period task
-    celery.conf.beat_schedule = {
-        # for coping with faults during message delivery
-        "check_message": {
-            "task": "mib.tasks.periodic_task.check_messages",
-            "schedule": timedelta(minutes=15),  # every 15 minutes
-            "args": [False],  # test mode
-        },
-        # lottery game
-        "lottery": {
-            "task": "mib.tasks.periodic_task.lottery",
-            "schedule": crontab(0, 0, day_of_month="1"),  # every 1st
-            "args": [False],  # test mode
-        },
-    }
-    return celery
