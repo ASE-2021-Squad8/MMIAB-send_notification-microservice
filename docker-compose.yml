@@ -5,47 +5,12 @@
 version: "3.6"
 
 services:
-  db:
-    image: postgres:13
-    restart: unless-stopped
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      # this is only for development purpose
-      - "5342:5342"
-    env_file:
-      - env_file
-
-  mib_users:
-    <<: &mib_users
+  mib_notifications:
+    <<: &mib_notifications
       # Building the image
-      image: "mib-users:latest"
+      image: "mib-notifications:latest"
       build:
         context: .
         dockerfile: Dockerfile 
-
-    ports:
-     - "5000:5000"
-    env_file:
-      - env_file
-    environment:
-      - POSTGRES_HOST=db
-    depends_on:
-      - db
-      - migrations
-
-  migrations:
-    #
-    # this service is used to apply migrations on db
-    #
-    <<: *mib_users
-    command: flask db upgrade
-    env_file:
-      - env_file
-    environment:
-      - POSTGRES_HOST=db
-    restart: on-failure
-
-# Declaring all volumes
-volumes:
-  pgdata: # for maintaing db data
+      env_file:
+        - env_file
