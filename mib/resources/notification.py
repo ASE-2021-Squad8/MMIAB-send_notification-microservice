@@ -1,8 +1,10 @@
 import os
 import smtplib
+from smtplib import *
 from email.message import EmailMessage
 import socket
 from collections import namedtuple
+from logging import getLogger
 import connexion
 from flask import jsonify
 
@@ -45,9 +47,9 @@ def send_email(body):  # noqa: E501
                 mail["Subject"] = "MMIAB - Message from " + body["sender"]
                 mail.set_content(body["body"])
 
-                server.sendmail(config.email, body["receiver"], mail.as_string())
+                server.sendmail(config.email, body["recipient"], mail.as_string())
         except Exception as e:  # pragma: no cover
-            return jsonify({"message": "failure while sending email"}), 500
+            return jsonify({"message": "failure with SMTP"}), 500
     else:  # pragma: no cover
         return jsonify({"message": "endpoint requires json arguments"}), 400
 
