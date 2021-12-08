@@ -6,11 +6,8 @@ import os
 __version__ = "0.1"
 
 import logging
-from datetime import timedelta
 import connexion
 
-from celery.schedules import crontab  # cronetab for lottery
-from flask import Flask
 from flask_environments import Environments
 
 debug_toolbar = None
