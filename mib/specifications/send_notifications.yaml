@@ -9,41 +9,41 @@ servers:
 
 paths:
   /email:
-   put:
-    tags: [send-notification]
-    summary: send an eamil
-    operationId: mib.resources.notification.send_email
-    requestBody:
-     description: send an email according with request parameters
-     required: true
-     content:
-        application/json:
-         schema:
-          type: object
-          required:
-            - sender
-            - recipient
-            - body
-          properties:
-            sender:
-             type: string
-             description: sender's eamil 
-             example: bob@example.com
-             format: email
-            recipient:
-             type: string
-             description: recipient's email
-             example: alice@example.com
-             format: email 
-            body:
-             type: string
-             description: email content
-             example: 'Hi Alice how is it going?'
-             maxLength: 4096
-    responses:
-      200:
-       description: The email has been sent successfully
-      400:
-       description: Missing required field
-      default:
-       description: Error during sending process
+    put:
+      tags: [send-notification]
+      summary: send an eamil
+      operationId: mib.resources.notification.send_email
+      requestBody:
+        description: send an email according with request parameters
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - sender
+                - recipient
+                - body
+              properties:
+                sender:
+                  type: string
+                  description: sender's eamil 
+                  example: bob@example.com
+                  format: email
+                recipient:
+                  type: string
+                  description: recipient's email
+                  example: alice@example.com
+                  format: email 
+                body:
+                  type: string
+                  description: email content
+                  example: 'Hi Alice how is it going?'
+                  maxLength: 4096
+      responses:
+        200:
+          description: The email has been sent successfully
+        400:
+          description: Missing required field
+        default:
+          description: Error during sending process

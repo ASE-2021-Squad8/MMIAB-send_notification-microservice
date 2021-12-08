@@ -16,11 +16,8 @@ DefaultEmailConfig = EmailConfig(
     os.environ.get("MAIL_SERVER_PASSWORD", ""),
 )
 
-def send_email(body):  # noqa: E501
+def send_email():  # noqa: E501
     """Send an email
-
-    :param body: send an email according with request parameters
-    :type body: dict | bytes
 
     :rtype: None
     """
@@ -46,7 +43,6 @@ def send_email(body):  # noqa: E501
                 mail = EmailMessage()
                 mail["Subject"] = "MMIAB - Message from " + body["sender"]
                 mail.set_content(body["body"])
-
                 server.sendmail(config.email, body["recipient"], mail.as_string())
         except Exception as e:  # pragma: no cover
             return jsonify({"message": "failure with SMTP"}), 500

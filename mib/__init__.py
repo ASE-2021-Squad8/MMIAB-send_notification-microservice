@@ -17,7 +17,7 @@ api_app = None
 logger = None
 
 
-def create_app():
+def create_app(): # pragma: no cover
     global db
     global app
     global migrate
